@@ -1,0 +1,5 @@
+export {default as authReducer} from './auth/authSlice'
+export {default as infoReducer} from './information/infoSlice'
+export {default as stagelistReducer} from './stageList/stagelistSlice'
+export {default as progressStageReducer} from './progressStage/progressStageSlice'
+export {default as historyReducer} from './history/hisotrySlice'

@@ -9,6 +9,7 @@ export default function Dropdown() {
 
   const handleLogout = () => {
     dispatch(logout());
+    window.location.reload();
   };
 
   return (

@@ -6,7 +6,6 @@ import {
   updateBtnSave,
   updateUserConfirm,
 } from "../../redux/features/progressStage/progressStageSlice";
-import { setVideoSrc } from "../../redux/features/stageList/stageListSlice";
 import {
   RiFileExcel2Fill,
   RiCheckFill,
@@ -14,21 +13,28 @@ import {
   RiSave2Fill,
 } from "react-icons/ri";
 import { saveAs } from "file-saver";
-import { excelData } from "../../fake/data";
+// import { excelData } from "../../fake/data";
 import axiosClient from "../../api/axiosClient";
 import Modal from "../Modal";
 import History from "./History";
 import ReactPlayer from "react-player";
-
+import { setVideoSrc } from "../../redux/features/stageList/stagelistSlice";
 
 interface ProgressTableProps {
   playRef: RefObject<ReactPlayer | null>;
+  isPlaying: boolean;
+  setIsPlaying: (isPlaying: boolean) => void;
 }
 
-const ProgressTable = ({playRef}: ProgressTableProps) => {
+const ProgressTable = ({
+  playRef,
+  isPlaying,
+  setIsPlaying,
+}: ProgressTableProps) => {
   const progressData = useAppSelector((state) => state.progressStage.stages);
   const activeId = useAppSelector((state) => state.stagelist.activeId);
   const dispatch = useAppDispatch();
+  const { token } = useAppSelector((state) => state.auth);
 
   const [selectedCell, setSelectedCell] = useState<{
     rowId: number | string | null;
@@ -111,49 +117,55 @@ const ProgressTable = ({playRef}: ProgressTableProps) => {
   return (
     <>
       <div className="w-full mt-2 flex gap-2">
-        <History playRef={playRef} />
+        <History
+          playRef={playRef}
+          isPlaying={isPlaying}
+          setIsPlaying={setIsPlaying}
+        />
         <div className="flex w-5/6 max-h-[309px] border-separate flex-col overflow-clip">
           <div className="flex justify-between items-center py-2">
             <div className="text-primary-50 text-xl font-semibold">
               Progress
             </div>
-            <div className="flex gap-2 justify-center items-center">
-              <button
-                type="button"
-                disabled={true}
-                className="bg-red-600 hover:bg-red-700 text-primary-50 font-bold py-2 px-4 rounded flex justify-center items-center gap-1 opacity-50 cursor-not-allowed"
-              >
-                <RiDeleteBin6Fill />
-                <span>Delete</span>
-              </button>
-              <button
-                type="button"
-                className={`${
-                  progressData[activeId].progressStageData.every(
-                    (item) => item.userConfirm !== ""
-                  )
-                    ? "opacity-50 cursor-not-allowed"
-                    : " hover:bg-blue-700"
-                } bg-blue-600 text-primary-50 font-bold py-2 px-4 rounded flex justify-center items-center gap-1`}
-                onClick={handleClickConfirm}
-                disabled={
-                  progressData[activeId].progressStageData.every(
-                    (item) => item.userConfirm !== ""
-                  )
-                    ? true
-                    : false
-                }
-              >
-                <RiCheckFill /> <span>Confirm</span>
-              </button>
-              <button
-                type="button"
-                className="bg-green-600 hover:bg-green-700 text-primary-50 font-bold py-2 px-4 rounded flex justify-center items-center gap-1"
-                onClick={handleExportExcel}
-              >
-                <RiFileExcel2Fill /> <span>Export Excel</span>
-              </button>
-            </div>
+            {token && (
+              <div className="flex gap-2 justify-center items-center">
+                <button
+                  type="button"
+                  disabled={true}
+                  className="bg-red-600 hover:bg-red-700 text-primary-50 font-bold py-2 px-4 rounded flex justify-center items-center gap-1 opacity-50 cursor-not-allowed"
+                >
+                  <RiDeleteBin6Fill />
+                  <span>Delete</span>
+                </button>
+                <button
+                  type="button"
+                  className={`${
+                    progressData[activeId].progressStageData.every(
+                      (item) => item.userConfirm !== ""
+                    )
+                      ? "opacity-50 cursor-not-allowed"
+                      : " hover:bg-blue-700"
+                  } bg-blue-600 text-primary-50 font-bold py-2 px-4 rounded flex justify-center items-center gap-1`}
+                  onClick={handleClickConfirm}
+                  disabled={
+                    progressData[activeId].progressStageData.every(
+                      (item) => item.userConfirm !== ""
+                    )
+                      ? true
+                      : false
+                  }
+                >
+                  <RiCheckFill /> <span>Confirm</span>
+                </button>
+                <button
+                  type="button"
+                  className="bg-green-600 hover:bg-green-700 text-primary-50 font-bold py-2 px-4 rounded flex justify-center items-center gap-1"
+                  onClick={handleExportExcel}
+                >
+                  <RiFileExcel2Fill /> <span>Export Excel</span>
+                </button>
+              </div>
+            )}
           </div>
           <table className="w-full table-fixed text-primary-50 text-center">
             <thead className="sticky top-0 bg-primary-700">

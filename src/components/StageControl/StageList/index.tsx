@@ -1,14 +1,15 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import {
-  fetchStageList,
-  setActiveId,
-  setVideoSrc,
-} from "../../../redux/features/stageList/stageListSlice";
+
 import {
   addProgressStage,
   ProgressStageState,
 } from "../../../redux/features/progressStage/progressStageSlice";
+import {
+  fetchStageList,
+  setActiveId,
+  setVideoSrc,
+} from "../../../redux/features/stageList/stagelistSlice";
 
 const StageList = () => {
   const { stageListStage: tabStages, activeId } = useAppSelector(
@@ -17,8 +18,10 @@ const StageList = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(fetchStageList(tabStages[activeId].name));
-  }, [dispatch, tabStages[activeId].name]);
+    if (tabStages[activeId]?.items.length === 0) {
+      dispatch(fetchStageList(tabStages[activeId].name));
+    }
+  }, [dispatch, activeId]);
 
   const handleClickTabStage = (tabIndex: number) => {
     dispatch(setActiveId({ id: tabIndex }));

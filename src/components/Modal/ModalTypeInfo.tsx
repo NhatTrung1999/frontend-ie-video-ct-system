@@ -93,7 +93,7 @@ const ModalTypeInfo = ({ setIsOpenModalType }: ModalTypeInfoProps) => {
       toast.success("Submit success!");
       localStorage.setItem("paths", JSON.stringify(paths));
       setIsOpenModalType(false);
-      // dispatch(fetchStageList(values.area.toUpperCase()));
+      window.location.reload();
     } else {
       toast.error(Msg, {
         data: {

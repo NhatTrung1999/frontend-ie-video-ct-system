@@ -1,14 +1,18 @@
 import ReactPlayer from "react-player";
-import { useRef, useState } from "react";
+import { RefObject, useState } from "react";
 import VideoPlayer from "./VideoPlayer";
 import ControlPanel from "./ControlPanel";
 import StageList from "./StageList";
 
-const StageControl = () => {
+interface StageControlProps {
+  playRef: RefObject<ReactPlayer | null>
+}
+
+const StageControl = ({playRef}: StageControlProps) => {
   const [progressing, setProgressing] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [duration, setDuration] = useState<number>(0);
-  const playRef = useRef<ReactPlayer | null>(null);
+  // const playRef = useRef<ReactPlayer | null>(null);
   // const [videoUrl, setVideoUrl] = useState<string>("");
 
   const handleProgressing = (state: { playedSeconds: number }) => {

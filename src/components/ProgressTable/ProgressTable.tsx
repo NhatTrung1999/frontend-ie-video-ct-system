@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import React, { Fragment, RefObject, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import {
   setCycleTimeId,
@@ -18,8 +18,14 @@ import { excelData } from "../../fake/data";
 import axiosClient from "../../api/axiosClient";
 import Modal from "../Modal";
 import History from "./History";
+import ReactPlayer from "react-player";
 
-const ProgressTable = () => {
+
+interface ProgressTableProps {
+  playRef: RefObject<ReactPlayer | null>;
+}
+
+const ProgressTable = ({playRef}: ProgressTableProps) => {
   const progressData = useAppSelector((state) => state.progressStage.stages);
   const activeId = useAppSelector((state) => state.stagelist.activeId);
   const dispatch = useAppDispatch();
@@ -105,8 +111,8 @@ const ProgressTable = () => {
   return (
     <>
       <div className="w-full mt-2 flex gap-2">
-        <History />
-        <div className="flex w-3/4 max-h-[309px] border-separate flex-col overflow-clip">
+        <History playRef={playRef} />
+        <div className="flex w-5/6 max-h-[309px] border-separate flex-col overflow-clip">
           <div className="flex justify-between items-center py-2">
             <div className="text-primary-50 text-xl font-semibold">
               Progress
